@@ -1,0 +1,15 @@
+
+.wrapper {
+	--net-size: 100px;
+	--net: var(--net-size) var(--net-size);
+	--net-color: #e9e9e9;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+	background: 
+		repeat 0 0/ var(--net) linear-gradient( -90deg, var(--net-color) 1px, transparent 1px),
+		repeat 0 0/ var(--net) linear-gradient(   0deg, var(--net-color) 1px, transparent 1px);
+}

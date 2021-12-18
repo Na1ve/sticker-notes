@@ -1,0 +1,58 @@
+
+.wrapper {
+	--size-x: 0;
+	--size-y: 0;
+
+	--position-x: 0;
+	--position-y: 0;
+
+  --header-size: 50px;
+
+	--bgcolor: 55;
+}
+
+
+.wrapper {
+  position: absolute;
+  top: calc(var(--position-y) * 1px);
+  left: calc(var(--position-x) * 1px);
+  width: calc(var(--size-x) * 1px);
+  height: calc(var(--size-y) * 1px);
+  background: hsl(var(--bgcolor), 82%, 85%);
+  box-shadow: 0 20px 30px -30px #000;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--header-size);
+  cursor: move;
+}
+
+.content {
+  /* TODO: theme scroll-bar; */
+	position: absolute;
+	top: var(--header-size);
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	resize: none;
+	box-sizing: border-box;
+	border: 0 none;
+	background: transparent;
+}
+
+.content:focus {
+  outline: 0 none;
+}
+
+.resize-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  cursor: nwse-resize;
+}
