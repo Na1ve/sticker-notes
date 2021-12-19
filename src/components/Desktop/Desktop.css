@@ -8,6 +8,8 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
+  min-width: 1024px;
+  min-height: 768px;
 	overflow: hidden;
 	background: 
 		repeat 0 0/ var(--net) linear-gradient( -90deg, var(--net-color) 1px, transparent 1px),

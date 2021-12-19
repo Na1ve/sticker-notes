@@ -11,54 +11,63 @@ import { IStickyNote, IStickyNoteProps } from '../../interfaces/StickyNote';
 const cx = classNames.bind(styles);
 
 export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
+  const { id } = props;
   const [size, setSize] = React.useState<IVector>(props.size);
   const [position, setPosition] = React.useState<IVector>(props.position);
   const [content, setContent] = React.useState(props.content);
+  const [dragging, setDragging] = React.useState(false);
 
-  const moveHandler = draggable(
-    (delta: IVector) => {
-      setPosition(addVectors(props.position, delta));
-    }, (delta: IVector) => {
-      const targetValue: IVector = addVectors(props.position, delta);
-      setPosition(targetValue);
-      if (props.onSave) {
-        props.onSave({
-          id: props.id,
-          size,
-          position: targetValue,
-          content,
-        });
-      }
-    },
-  );
-
-  const resizeHandler = draggable((delta: IVector) => {
-      setSize(addVectors(props.size, delta));
-    }, (delta: IVector) => {
-      const targetValue: IVector = addVectors(props.size, delta);
-      setSize(targetValue);
-      if (props.onSave) {
-        props.onSave({
-          id: props.id,
-          size: targetValue,
-          position,
-          content,
-        });
-      }
-    },
-  );
-
-  const contentHandler = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const content = e.currentTarget.value
-    setContent(content);
+  const saveHandler = (aditableProperty: Partial<IStickyNote>) => {
     if (props.onSave) {
       props.onSave({
-        id: props.id,
+        id,
         size,
         position,
         content,
-      });
+        ...aditableProperty,
+      })
     }
+  };
+
+  const moveHandler = draggable(
+    (delta: IVector) => {
+      setDragging(true);
+      setPosition(addVectors(props.position, delta));
+    }, (delta: IVector) => {
+      const targetValue: IVector = addVectors(props.position, delta);
+      setDragging(false);
+      setPosition(targetValue);
+      saveHandler({position: targetValue});
+    },
+    props.droppableZones?.map(({zone, handler}) => {
+      return {
+        zone,
+        handler: (result: boolean) => {
+          if (result) {
+            handler({
+              id
+            });
+          }
+        }
+      };
+    })
+  );
+
+  const resizeHandler = draggable((delta: IVector) => {
+      setDragging(true);
+      setSize(addVectors(props.size, delta));
+    }, (delta: IVector) => {
+      const targetValue: IVector = addVectors(props.size, delta);
+      setDragging(false);
+      setSize(targetValue);
+      saveHandler({size: targetValue});
+    },
+  );
+
+  const setContentHandler = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const content = e.currentTarget.value
+    setContent(content);
+    saveHandler({content});
   };
 
   const stickerStyle = {
@@ -69,13 +78,13 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
   } as React.CSSProperties;
 
   return (
-    <div className={cx('wrapper')} style={stickerStyle}>
+    <div className={cx('wrapper', {'wrapper_dragging': dragging})} style={stickerStyle}>
       {props.movable &&
         <div className={cx('header')} onMouseDown={moveHandler}/>
       }
       <textarea 
         className={cx('content')} 
-        onChange={contentHandler} 
+        onChange={setContentHandler} 
         value={content} 
         placeholder={'Enter the content'}
         disabled={!props.editable}

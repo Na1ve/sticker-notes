@@ -16,12 +16,17 @@ export const stickyNoteFactory = (model?: Partial<IStickyNote>): IStickyNote => 
 		size: {x: 0, y: 0},
 		...model,
 	};
-}
+};
 
+export interface DroppableZone {
+  zone: React.RefObject<HTMLInputElement>,
+  handler: (sticker: Partial<IStickyNote>) => void;
+};
 
 export interface IStickyNoteProps extends IStickyNote {
   editable?: boolean;
   resizable?: boolean;
   movable?: boolean;
   onSave?: (sticker: IStickyNote) => void;
-}
+  droppableZones?: DroppableZone[];
+};
