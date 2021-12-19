@@ -1,0 +1,34 @@
+
+.stack {
+  --bgcolor: 55;
+}
+
+.stack {
+  position: absolute;
+  background: hsl(var(--bgcolor), 80%, 80%);
+}
+
+.stack::before,
+.stack::after {
+  position: absolute;
+  transform-origin: 0 0;
+  content: '';
+}
+
+.stack::before {
+  top: 0;
+  left: 100%;
+  bottom: 0;
+  width: 3px;
+  background: hsl(var(--bgcolor), 80%, 30%);
+  transform: skewY(45deg);
+}
+
+.stack::after {
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: hsl(var(--bgcolor), 80%, 20%);
+  transform: skewX(45deg);
+}

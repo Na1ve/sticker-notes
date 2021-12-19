@@ -20,6 +20,8 @@
   height: calc(var(--size-y) * 1px);
   background: hsl(var(--bgcolor), 82%, 85%);
   box-shadow: 0 20px 30px -30px #000;
+  min-width: 200px;
+  min-height: 200px;
 }
 
 .header {
@@ -43,6 +45,9 @@
 	box-sizing: border-box;
 	border: 0 none;
 	background: transparent;
+  font: 400 40px/1.2 'Caveat', cursive;
+  padding: 20px;
+  user-select: none;
 }
 
 .content:focus {

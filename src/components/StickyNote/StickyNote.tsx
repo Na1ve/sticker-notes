@@ -2,19 +2,15 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './StickyNote.css';
 
-import { addVectors, subVectors } from '../../utils/vector';
+import { addVectors } from '../../utils/vector';
 import { draggable } from '../../utils/draggable';
 import { IVector } from '../../interfaces/Vector';
-import { IStickyNote } from '../../interfaces/StickyNote';
+import { IStickyNote, IStickyNoteProps } from '../../interfaces/StickyNote';
 
 
 const cx = classNames.bind(styles);
 
-interface IStickyNoteProps extends IStickyNote {
-  onSave?: (sticker: IStickyNote) => void;
-}
-
-const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
+export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
   const [size, setSize] = React.useState<IVector>(props.size);
   const [position, setPosition] = React.useState<IVector>(props.position);
   const [content, setContent] = React.useState(props.content);
@@ -27,6 +23,7 @@ const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
       setPosition(targetValue);
       if (props.onSave) {
         props.onSave({
+          id: props.id,
           size,
           position: targetValue,
           content,
@@ -42,6 +39,7 @@ const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
       setSize(targetValue);
       if (props.onSave) {
         props.onSave({
+          id: props.id,
           size: targetValue,
           position,
           content,
@@ -49,6 +47,19 @@ const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
       }
     },
   );
+
+  const contentHandler = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const content = e.currentTarget.value
+    setContent(content);
+    if (props.onSave) {
+      props.onSave({
+        id: props.id,
+        size,
+        position,
+        content,
+      });
+    }
+  };
 
   const stickerStyle = {
     '--size-x': size.x,
@@ -59,11 +70,19 @@ const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
 
   return (
     <div className={cx('wrapper')} style={stickerStyle}>
-      <div className={cx('header')} onMouseDown={moveHandler}/>
-      <textarea className={cx('content')} onChange={(e) => setContent(e.target.value)} value={content} />
-      <div className={cx('resize-corner')} onMouseDown={resizeHandler}/>
+      {props.movable &&
+        <div className={cx('header')} onMouseDown={moveHandler}/>
+      }
+      <textarea 
+        className={cx('content')} 
+        onChange={contentHandler} 
+        value={content} 
+        placeholder={'Enter the content'}
+        disabled={!props.editable}
+      />
+      {props.resizable &&
+        <div className={cx('resize-corner')} onMouseDown={resizeHandler}/>
+      }
     </div>
   );
 }
-
-export {StickyNote};
