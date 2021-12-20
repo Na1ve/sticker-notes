@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './Desktop.css';
 
-import { IStickyNote, stickyNoteFactory } from '../../interfaces/StickyNote';
+import { IStickyNote, TStickerId } from '../../interfaces/StickyNote';
 import { StickyNote } from '../StickyNote';
 import { CreateZone } from '../CreateZone';
 import { TrashZone } from '../TrashZone';
@@ -10,45 +10,37 @@ import { TrashZone } from '../TrashZone';
 const cx = classNames.bind(styles);
 
 interface IDesktopProps {
-
+  onSave: (stickerList: IStickyNote[]) => void,
+  pending?: boolean,
+  stickerList: IStickyNote[],
 }
 
-const Desktop: React.FC<IDesktopProps> = () => {
-  const [stickerList, setStickerList] = React.useState<IStickyNote[]>([]);
+const Desktop: React.FC<IDesktopProps> = ({
+  onSave: setStickerList,
+  pending,
+  stickerList,
+}) => {
   const trashZone = React.useRef(null);
 
-  const saveHandler = (index: number) => (sticker: IStickyNote) => {
+  const saveHandler = (sticker: Partial<IStickyNote>) => {
     const newStickerList = [...stickerList];
-    newStickerList.splice(index, 1);
-    newStickerList.push(sticker);
+    const index = newStickerList.findIndex(({id}) => id === sticker.id);
+    if (index >= 0) {
+      newStickerList.splice(index, 1);
+    }
+    if (sticker.position && sticker.size) {
+      newStickerList.push(sticker as IStickyNote);
+    }
     setStickerList(newStickerList);
   }
 
-  const createHandler = (sticker: IStickyNote) => {
-    setStickerList([
-      ...stickerList, 
-      {
-        ...sticker,
-        content: '',
-      }
-    ]);
-  }
-
-  const onRemove = (stickerInfo: Partial<IStickyNote>) => {
-    const newStickerList = [...stickerList];
-    const deletePosition = newStickerList.findIndex(({id}) => id === stickerInfo.id);
-    newStickerList.splice(deletePosition, 1);
-
-    setStickerList(newStickerList); 
-  };
-
   const commonDroppableZones = [{
     zone: trashZone,
-    handler: onRemove,
+    handler: saveHandler,
   }];
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx('wrapper', {wrapper_pending: pending})}>
     	{stickerList.map((stickerProps: IStickyNote, index: number) => 
         <StickyNote 
           {...stickerProps} 
@@ -56,11 +48,11 @@ const Desktop: React.FC<IDesktopProps> = () => {
           editable
           resizable
           movable
-          onSave={saveHandler(index)}
+          onSave={saveHandler}
           droppableZones={commonDroppableZones}
         />
       )}
-      <CreateZone onSave={createHandler} />
+      <CreateZone onSave={saveHandler} />
       <TrashZone isVisible={stickerList.length > 0} zone={trashZone} />
     </div>
   );

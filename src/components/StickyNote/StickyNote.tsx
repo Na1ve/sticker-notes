@@ -44,9 +44,7 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
         zone,
         handler: (result: boolean) => {
           if (result) {
-            handler({
-              id
-            });
+            handler({id});
           }
         }
       };

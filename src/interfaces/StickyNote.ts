@@ -1,8 +1,10 @@
 import { IVector } from './Vector';
 import { generateId } from '../utils/generateId';
 
+export type TStickerId = string;
+
 export interface IStickyNote {
-  id: string;
+  id: TStickerId;
 	content: string;
 	position: IVector;
 	size: IVector;

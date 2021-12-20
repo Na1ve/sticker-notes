@@ -1,18 +1,39 @@
 import React from 'react';
-import classNames from 'classnames/bind';
-import styles from './App.css';
-
+import { StickyNoteTransport } from '../../services/StickyNoteTransport';
+import { IStickyNote } from '../../interfaces/StickyNote';
 import { Desktop } from '../Desktop';
 
-const cx = classNames.bind(styles);
+import { debounce } from '../../utils/dabounce';
 
-interface IAppProps {
+const App = () => {
+  const [stickerList, setStickerList] = React.useState<IStickyNote[]>([]);
+  const [pending, setPending] = React.useState(true);
 
-}
+  const rendered = React.useMemo(() => true, []);
 
-const App: React.FC<IAppProps> = () => {
+  const sendData = React.useCallback(debounce((stickerList: IStickyNote[]) => {
+    StickyNoteTransport.post(stickerList);
+  }), [rendered]);
+
+  const saveHandler = (stickerList: IStickyNote[]) => {
+    sendData(stickerList);
+    setStickerList(stickerList);
+  };
+
+  // in case of SSR useEffect become useless
+  React.useEffect(() => {
+    const fetch = async () => {
+      const data = await StickyNoteTransport.get();
+
+      setStickerList(data);
+      setPending(false);
+    }
+
+    fetch();
+  }, []);
+
   return (
-    <Desktop />
+    <Desktop onSave={saveHandler} stickerList={stickerList} pending={pending} />
   );
 }
 

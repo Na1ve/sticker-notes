@@ -18,6 +18,11 @@ enum Step {
   SetSize,
 };
 
+const stickerDummyProps = stickyNoteFactory({
+  size: DEFAULT_SIZE,
+  position: DEFAULT_POSITION,
+});
+
 const stickyNotePropsByStep: Record<Step, Partial<IStickyNoteProps>> = {
   [Step.Create]: {
     content: 'Drag to create new Sticky Note',
@@ -39,10 +44,6 @@ interface ICreateZoneProps {
 
 const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
   const position: IVector = DEFAULT_POSITION;
-  const stickerDummyProps = stickyNoteFactory({
-    size: DEFAULT_SIZE,
-    position: DEFAULT_POSITION,
-  });
   const [stickerProps, setStickerProps] = React.useState<IStickyNote>(stickerDummyProps);
   const [step, setStep] = React.useState<Step>(Step.Create);
 
@@ -67,7 +68,10 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
           id: generateId(),
         });
         setStep(Step.Create);
-        handleSave(stickerProps);
+        handleSave({
+          ...stickerProps, 
+          content: ''
+        });
         break;
     }
   }
