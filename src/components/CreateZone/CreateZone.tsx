@@ -13,6 +13,14 @@ const cx = classNames.bind(styles);
 const DEFAULT_SIZE: IVector = {x: 240, y: 240};
 const DEFAULT_POSITION: IVector = {x: 20, y: 20};
 
+const DEFAULT_COLOR = 55;
+const COLOR_OFFSET = 135;
+const TOTAL_COLORS = 360;
+
+const getNextColor = (color: number): number => {
+  return (color + COLOR_OFFSET) % TOTAL_COLORS;
+};
+
 enum Step {
   Create,
   SetSize,
@@ -22,6 +30,7 @@ const stickerDummyProps = stickyNoteFactory({
   size: DEFAULT_SIZE,
   position: DEFAULT_POSITION,
 });
+
 
 const stickyNotePropsByStep: Record<Step, Partial<IStickyNoteProps>> = {
   [Step.Create]: {
@@ -40,12 +49,28 @@ const stickyNotePropsByStep: Record<Step, Partial<IStickyNoteProps>> = {
 
 interface ICreateZoneProps {
   onSave: (sticker: IStickyNote) => void;
+  lastUsedColor?: number | null;
 }
 
 const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
   const position: IVector = DEFAULT_POSITION;
-  const [stickerProps, setStickerProps] = React.useState<IStickyNote>(stickerDummyProps);
+  const [currentColor, setCurrentColor] = React.useState<number>(DEFAULT_COLOR);
+
+  const [stickerProps, setStickerProps] = React.useState<IStickyNote>({
+    ...stickerDummyProps,
+    color: currentColor,
+  });
   const [step, setStep] = React.useState<Step>(Step.Create);
+
+  const createNewDummy = () => {
+    const color = getNextColor(currentColor);
+    setStickerProps({
+      ...stickerDummyProps,
+      color,
+      id: generateId(),
+    });
+    setCurrentColor(color);
+  };
 
   const additionalStickerProps: Partial<IStickyNoteProps> = stickyNotePropsByStep[step];
 
@@ -63,10 +88,7 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
         setStep(Step.SetSize);
         break;
       case Step.SetSize:
-        setStickerProps({
-          ...stickerDummyProps,
-          id: generateId(),
-        });
+        createNewDummy();
         setStep(Step.Create);
         handleSave({
           ...stickerProps, 

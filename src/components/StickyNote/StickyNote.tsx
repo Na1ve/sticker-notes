@@ -11,7 +11,7 @@ import { IStickyNote, IStickyNoteProps } from '../../interfaces/StickyNote';
 const cx = classNames.bind(styles);
 
 export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
-  const { id } = props;
+  const { id, color } = props;
   const [size, setSize] = React.useState<IVector>(props.size);
   const [position, setPosition] = React.useState<IVector>(props.position);
   const [content, setContent] = React.useState(props.content);
@@ -24,6 +24,7 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
         size,
         position,
         content,
+        color,
         ...aditableProperty,
       })
     }
@@ -73,6 +74,7 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
     '--size-y': size.y,
     '--position-x': position.x,
     '--position-y': position.y,
+    '--bgcolor': color,
   } as React.CSSProperties;
 
   return (

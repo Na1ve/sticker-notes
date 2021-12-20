@@ -8,6 +8,7 @@ export interface IStickyNote {
 	content: string;
 	position: IVector;
 	size: IVector;
+  color?: number;
 };
 
 export const stickyNoteFactory = (model?: Partial<IStickyNote>): IStickyNote => {
