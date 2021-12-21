@@ -41,7 +41,7 @@ const Desktop: React.FC<IDesktopProps> = ({
 
   return (
     <div className={cx('wrapper', {wrapper_pending: pending})}>
-    	{stickerList.map((stickerProps: IStickyNote, index: number) => 
+      {stickerList.map((stickerProps: IStickyNote, index: number) => 
         <StickyNote 
           {...stickerProps} 
           key={stickerProps.id}

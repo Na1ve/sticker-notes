@@ -5,20 +5,20 @@ export type TStickerId = string;
 
 export interface IStickyNote {
   id: TStickerId;
-	content: string;
-	position: IVector;
-	size: IVector;
+  content: string;
+  position: IVector;
+  size: IVector;
   color?: number;
 };
 
 export const stickyNoteFactory = (model?: Partial<IStickyNote>): IStickyNote => {
-	return {
+  return {
     id: generateId(),
-		content: '',
-		position: {x: 0, y: 0},
-		size: {x: 0, y: 0},
-		...model,
-	};
+    content: '',
+    position: {x: 0, y: 0},
+    size: {x: 0, y: 0},
+    ...model,
+  };
 };
 
 export interface DroppableZone {
