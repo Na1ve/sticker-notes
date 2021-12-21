@@ -27,6 +27,7 @@ export interface DroppableZone {
 };
 
 export interface IStickyNoteProps extends IStickyNote {
+  withShadow?: boolean;
   editable?: boolean;
   resizable?: boolean;
   movable?: boolean;

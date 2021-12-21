@@ -1,14 +1,14 @@
 
 .wrapper {
-	--size-x: 0;
-	--size-y: 0;
+  --size-x: 0;
+  --size-y: 0;
 
-	--position-x: 0;
-	--position-y: 0;
+  --position-x: 0;
+  --position-y: 0;
 
   --header-size: 50px;
 
-	--bgcolor: 55;
+  --bgcolor: 55;
 }
 
 
@@ -18,8 +18,6 @@
   left: calc(var(--position-x) * 1px);
   width: calc(var(--size-x) * 1px);
   height: calc(var(--size-y) * 1px);
-  background: hsl(var(--bgcolor), 82%, 85%);
-  box-shadow: 0 20px 30px -30px #000;
   min-width: 200px;
   min-height: 200px;
   max-width: 800px;
@@ -28,6 +26,21 @@
 
 .wrapper_dragging {
   z-index: 1;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: 
+    linear-gradient(-45deg, hsl(var(--bgcolor), 82%, 93%), transparent 50px),
+    linear-gradient( 45deg, hsl(var(--bgcolor), 82%, 90%), transparent 50px),
+    linear-gradient(180deg, 
+      hsl(var(--bgcolor), 82%, 86%) calc(var(--header-size) - 2px), 
+      hsl(var(--bgcolor), 82%, 82%) var(--header-size), 
+      hsl(var(--bgcolor), 82%, 85%) 100%);
 }
 
 .header {
@@ -41,16 +54,16 @@
 
 .content {
   /* TODO: theme scroll-bar; */
-	position: absolute;
-	top: var(--header-size);
-	right: 0;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	resize: none;
-	box-sizing: border-box;
-	border: 0 none;
-	background: transparent;
+  position: absolute;
+  top: var(--header-size);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  resize: none;
+  box-sizing: border-box;
+  border: 0 none;
+  background: transparent;
   font: 400 40px/1.2 'Caveat', cursive;
   padding: 0 20px 20px;
   user-select: none;
@@ -66,4 +79,60 @@
   bottom: 0;
   padding: 20px;
   cursor: nwse-resize;
+}
+
+.top-shadow {
+  position: absolute;
+  top: var(--header-size);
+  right: -10px;
+  bottom: 20%;
+  left: -10px;
+  -webkit-mask-image: linear-gradient(0, transparent 0, #000 50%, #000 95%, transparent 100%);
+}
+
+.top-shadow::before {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  bottom: 0;
+  left: 10px;
+  content: '';
+
+  box-shadow: 0 0 3px -1px #000;
+}
+
+.bottom-shadow {
+  /* positiove and negative shadow values */
+  --pos: calc(var(--size-x) * .1px);
+  --neg: calc(var(--size-x) * -.1px);
+}
+
+.bottom-shadow {
+  position: absolute;
+  top: var(--header-size);
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.bottom-shadow::before,
+.bottom-shadow::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: '';
+}
+
+.bottom-shadow::before {
+  transform-origin: 0 100%;
+  transform: skew(-5deg, -5deg);
+  box-shadow: var(--neg) var(--pos) var(--pos) var(--neg) #000;
+}
+
+.bottom-shadow::after {
+  transform-origin: 100% 100%;
+  transform: skew(5deg, 5deg);
+  box-shadow: var(--pos) var(--pos) var(--pos) var(--neg) #000;
 }

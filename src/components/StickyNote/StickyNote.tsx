@@ -11,7 +11,7 @@ import { IStickyNote, IStickyNoteProps } from '../../interfaces/StickyNote';
 const cx = classNames.bind(styles);
 
 export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
-  const { id, color } = props;
+  const { id, color, withShadow } = props;
   const [size, setSize] = React.useState<IVector>(props.size);
   const [position, setPosition] = React.useState<IVector>(props.position);
   const [content, setContent] = React.useState(props.content);
@@ -79,19 +79,27 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
 
   return (
     <div className={cx('wrapper', {'wrapper_dragging': dragging})} style={stickerStyle}>
-      {props.movable &&
-        <div className={cx('header')} onMouseDown={moveHandler}/>
+      {withShadow && 
+        <>
+          <div className={cx('bottom-shadow')} />
+          <div className={cx('top-shadow')} />
+        </>
       }
-      <textarea 
-        className={cx('content')} 
-        onChange={setContentHandler} 
-        value={content} 
-        placeholder={'Enter the content'}
-        disabled={!props.editable}
-      />
-      {props.resizable &&
-        <div className={cx('resize-corner')} onMouseDown={resizeHandler}/>
-      }
+      <div className={cx('background')}>
+        {props.movable &&
+          <div className={cx('header')} onMouseDown={moveHandler}/>
+        }
+        <textarea 
+          className={cx('content')} 
+          onChange={setContentHandler} 
+          value={content} 
+          placeholder={'Enter the content'}
+          disabled={!props.editable}
+        />
+        {props.resizable &&
+          <div className={cx('resize-corner')} onMouseDown={resizeHandler}/>
+        }
+      </div>
     </div>
   );
 }

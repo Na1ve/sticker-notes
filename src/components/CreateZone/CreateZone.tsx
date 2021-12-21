@@ -75,6 +75,7 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
   const additionalStickerProps: Partial<IStickyNoteProps> = stickyNotePropsByStep[step];
 
   const stackStyles = {
+    ['--bgcolor']: getNextColor(currentColor),
     width: `${DEFAULT_SIZE.x}px`,
     height: `${DEFAULT_SIZE.y}px`,
     top: `${DEFAULT_POSITION.y}px`,

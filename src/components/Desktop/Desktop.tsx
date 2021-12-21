@@ -50,6 +50,7 @@ const Desktop: React.FC<IDesktopProps> = ({
           movable
           onSave={saveHandler}
           droppableZones={commonDroppableZones}
+          withShadow
         />
       )}
       <CreateZone onSave={saveHandler} />
