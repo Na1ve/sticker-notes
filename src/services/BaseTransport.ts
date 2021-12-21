@@ -19,7 +19,7 @@ export const BaseTransport = {
   post: (url: string, data: any): Promise<any> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const result = localStorage.setItem(url, JSON.stringify(data));
+        localStorage.setItem(url, JSON.stringify(data));
         resolve(null);
       }, randomize(FROM, TO));
     });

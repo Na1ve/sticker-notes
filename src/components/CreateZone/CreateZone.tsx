@@ -5,13 +5,18 @@ import styles from './CreateZone.css';
 import { generateId } from '../../utils/generateId';
 
 import { IVector } from '../../interfaces/Vector';
-import { IStickyNote, stickyNoteFactory, IStickyNoteProps, TStickerId } from '../../interfaces/StickyNote';
+import {
+  IStickyNote,
+  stickyNoteFactory,
+  IStickyNoteProps,
+  TStickerId,
+} from '../../interfaces/StickyNote';
 import { StickyNote } from '../StickyNote';
 
 const cx = classNames.bind(styles);
 
-const DEFAULT_SIZE: IVector = {x: 240, y: 240};
-const DEFAULT_POSITION: IVector = {x: 20, y: 20};
+const DEFAULT_SIZE: IVector = { x: 240, y: 240 };
+const DEFAULT_POSITION: IVector = { x: 20, y: 20 };
 
 const DEFAULT_COLOR = 55;
 const COLOR_OFFSET = 135;
@@ -24,13 +29,12 @@ const getNextColor = (color: number): number => {
 enum Step {
   Create,
   SetSize,
-};
+}
 
 const stickerDummyProps = stickyNoteFactory({
   size: DEFAULT_SIZE,
   position: DEFAULT_POSITION,
 });
-
 
 const stickyNotePropsByStep: Record<Step, Partial<IStickyNoteProps>> = {
   [Step.Create]: {
@@ -38,22 +42,21 @@ const stickyNotePropsByStep: Record<Step, Partial<IStickyNoteProps>> = {
     movable: true,
     resizable: false,
     editable: false,
-  }, 
+  },
   [Step.SetSize]: {
     content: 'Drag by rb-corner to set size of sticker',
     movable: false,
     resizable: true,
     editable: false,
-  }
+  },
 };
 
 interface ICreateZoneProps {
-  onSave: (stickerId: TStickerId, sticker: IStickyNote) => void;
+  onSave: (stickerId: TStickerId, sticker?: IStickyNote) => void;
   lastUsedColor?: number | null;
 }
 
-const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
-  const position: IVector = DEFAULT_POSITION;
+const CreateZone: React.FC<ICreateZoneProps> = ({ onSave: handleSave }) => {
   const [currentColor, setCurrentColor] = React.useState<number>(DEFAULT_COLOR);
 
   const [stickerProps, setStickerProps] = React.useState<IStickyNote>({
@@ -82,29 +85,28 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
     left: `${DEFAULT_POSITION.x}px`,
   } as React.CSSProperties;
 
-  const nextStepHandler = (id: TStickerId, stickerProps: IStickyNote) => {
-    switch (step) {
-      case Step.Create:
-        setStickerProps(stickerProps);
-        setStep(Step.SetSize);
-        break;
-      case Step.SetSize:
-        createNewDummy();
-        setStep(Step.Create);
-        handleSave(
-          stickerProps.id, 
-          {
-            ...stickerProps, 
-            content: ''
-          }
-        );
-        break;
+  const nextStepHandler = (id: TStickerId, stickerProps?: IStickyNote) => {
+    if (stickerProps) {
+      switch (step) {
+        case Step.Create:
+          setStickerProps(stickerProps);
+          setStep(Step.SetSize);
+          break;
+        case Step.SetSize:
+          createNewDummy();
+          setStep(Step.Create);
+          handleSave(id, {
+            ...stickerProps,
+            content: '',
+          });
+          break;
+      }
     }
-  }
+  };
 
   return (
     <>
-      <div className={cx('stack')} style={stackStyles}/>
+      <div className={cx('stack')} style={stackStyles} />
       <StickyNote
         key={`${stickerProps.id}-${step}`}
         {...stickerProps}
@@ -113,6 +115,6 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
       />
     </>
   );
-}
+};
 
-export {CreateZone};
+export { CreateZone };

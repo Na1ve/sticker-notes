@@ -9,14 +9,13 @@ interface ITrashZoneProps {
   zone: React.RefObject<HTMLDivElement>;
 }
 
-const TrashZone: React.FC<ITrashZoneProps> = ({isVisible, zone}) => {
-
+const TrashZone: React.FC<ITrashZoneProps> = ({ isVisible, zone }) => {
   return (
-    <div className={cx('wrapper', {'wrapper_hidden': !isVisible})} ref={zone}>
+    <div className={cx('wrapper', { wrapper_hidden: !isVisible })} ref={zone}>
       <h2 className={cx('caption')}>Trash Zone</h2>
       <p className={cx('tip')}>Drop the Sticker here to remove</p>
     </div>
   );
-}
+};
 
-export {TrashZone};
+export { TrashZone };

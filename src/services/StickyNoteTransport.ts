@@ -15,14 +15,17 @@ export const StickyNoteTransport = {
   },
   post: async (data: IStickyNote[]) => {
     const vacantIdsNumber = data
-      .filter(({id}) => id.startsWith(CACHED_PREFIX))
-      .map(({id}) => Number(id.replace(/\D/g, '')));
+      .filter(({ id }) => id.startsWith(CACHED_PREFIX))
+      .map(({ id }) => Number(id.replace(/\D/g, '')));
     let minNonVacantNumber = Math.max(...vacantIdsNumber, -1) + 1;
-    return await BaseTransport.post(BASE_URL, data.map(sticker => ({
-      ...sticker,
-      id: sticker.id.startsWith(CACHED_PREFIX)
-        ? sticker.id
-        : `${CACHED_PREFIX}-${minNonVacantNumber++}`
-    })))
-  }
+    return await BaseTransport.post(
+      BASE_URL,
+      data.map((sticker) => ({
+        ...sticker,
+        id: sticker.id.startsWith(CACHED_PREFIX)
+          ? sticker.id
+          : `${CACHED_PREFIX}-${minNonVacantNumber++}`,
+      }))
+    );
+  },
 };

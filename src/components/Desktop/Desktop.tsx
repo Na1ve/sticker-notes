@@ -10,21 +10,17 @@ import { TrashZone } from '../TrashZone';
 const cx = classNames.bind(styles);
 
 interface IDesktopProps {
-  onSave: (stickerList: IStickyNote[]) => void,
-  pending?: boolean,
-  stickerList: IStickyNote[],
+  onSave: (stickerList: IStickyNote[]) => void;
+  pending?: boolean;
+  stickerList: IStickyNote[];
 }
 
-const Desktop: React.FC<IDesktopProps> = ({
-  onSave: setStickerList,
-  pending,
-  stickerList,
-}) => {
+const Desktop: React.FC<IDesktopProps> = ({ onSave: setStickerList, pending, stickerList }) => {
   const trashZone = React.useRef(null);
 
   const saveHandler = (stickerId: TStickerId, sticker?: IStickyNote) => {
     const newStickerList = [...stickerList];
-    const index = newStickerList.findIndex(({id}) => id === stickerId);
+    const index = newStickerList.findIndex(({ id }) => id === stickerId);
     if (index >= 0) {
       newStickerList.splice(index, 1);
     }
@@ -32,18 +28,20 @@ const Desktop: React.FC<IDesktopProps> = ({
       newStickerList.push(sticker);
     }
     setStickerList(newStickerList);
-  }
+  };
 
-  const commonDroppableZones = [{
-    zone: trashZone,
-    handler: saveHandler,
-  }];
+  const commonDroppableZones = [
+    {
+      zone: trashZone,
+      handler: saveHandler,
+    },
+  ];
 
   return (
-    <div className={cx('wrapper', {wrapper_pending: pending})}>
-      {stickerList.map((stickerProps: IStickyNote, index: number) => 
-        <StickyNote 
-          {...stickerProps} 
+    <div className={cx('wrapper', { wrapper_pending: pending })}>
+      {stickerList.map((stickerProps: IStickyNote, index: number) => (
+        <StickyNote
+          {...stickerProps}
           key={stickerProps.id}
           editable
           resizable
@@ -52,11 +50,11 @@ const Desktop: React.FC<IDesktopProps> = ({
           droppableZones={commonDroppableZones}
           withShadow
         />
-      )}
+      ))}
       <CreateZone onSave={saveHandler} />
       <TrashZone isVisible={stickerList.length > 0} zone={trashZone} />
     </div>
   );
-}
+};
 
-export {Desktop};
+export { Desktop };

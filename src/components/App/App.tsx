@@ -11,9 +11,12 @@ const App = () => {
 
   const rendered = React.useMemo(() => true, []);
 
-  const sendData = React.useCallback(debounce((stickerList: IStickyNote[]) => {
-    StickyNoteTransport.post(stickerList);
-  }), [rendered]);
+  const sendData = React.useCallback(
+    debounce((stickerList: IStickyNote[]) => {
+      StickyNoteTransport.post(stickerList);
+    }),
+    [rendered]
+  );
 
   const saveHandler = (stickerList: IStickyNote[]) => {
     sendData(stickerList);
@@ -27,14 +30,12 @@ const App = () => {
 
       setStickerList(data);
       setPending(false);
-    }
+    };
 
     fetch();
   }, []);
 
-  return (
-    <Desktop onSave={saveHandler} stickerList={stickerList} pending={pending} />
-  );
-}
+  return <Desktop onSave={saveHandler} stickerList={stickerList} pending={pending} />;
+};
 
-export {App};
+export { App };

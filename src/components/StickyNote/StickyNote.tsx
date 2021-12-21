@@ -7,7 +7,6 @@ import { draggable } from '../../utils/draggable';
 import { IVector } from '../../interfaces/Vector';
 import { IStickyNote, IStickyNoteProps } from '../../interfaces/StickyNote';
 
-
 const cx = classNames.bind(styles);
 
 export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) => {
@@ -19,17 +18,14 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
 
   const saveHandler = (aditableProperty: Partial<IStickyNote>) => {
     if (props.onSave) {
-      props.onSave(
+      props.onSave(id, {
         id,
-        {
-          id,
-          size,
-          position,
-          content,
-          color,
-          ...aditableProperty,
-        }
-      )
+        size,
+        position,
+        content,
+        color,
+        ...aditableProperty,
+      });
     }
   };
 
@@ -37,39 +33,42 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
     (delta: IVector) => {
       setDragging(true);
       setPosition(addVectors(props.position, delta));
-    }, (delta: IVector) => {
+    },
+    (delta: IVector) => {
       const targetValue: IVector = addVectors(props.position, delta);
       setDragging(false);
       setPosition(targetValue);
-      saveHandler({position: targetValue});
+      saveHandler({ position: targetValue });
     },
-    props.droppableZones?.map(({zone, handler}) => {
+    props.droppableZones?.map(({ zone, handler }) => {
       return {
         zone,
         handler: (result: boolean) => {
           if (result) {
             handler(id);
           }
-        }
+        },
       };
     })
   );
 
-  const resizeHandler = draggable((delta: IVector) => {
+  const resizeHandler = draggable(
+    (delta: IVector) => {
       setDragging(true);
       setSize(addVectors(props.size, delta));
-    }, (delta: IVector) => {
+    },
+    (delta: IVector) => {
       const targetValue: IVector = addVectors(props.size, delta);
       setDragging(false);
       setSize(targetValue);
-      saveHandler({size: targetValue});
-    },
+      saveHandler({ size: targetValue });
+    }
   );
 
   const setContentHandler = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const content = e.currentTarget.value
+    const content = e.currentTarget.value;
     setContent(content);
-    saveHandler({content});
+    saveHandler({ content });
   };
 
   const stickerStyle = {
@@ -81,28 +80,24 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
   } as React.CSSProperties;
 
   return (
-    <div className={cx('wrapper', {'wrapper_dragging': dragging})} style={stickerStyle}>
-      {withShadow && 
+    <div className={cx('wrapper', { wrapper_dragging: dragging })} style={stickerStyle}>
+      {withShadow && (
         <>
           <div className={cx('bottom-shadow')} />
           <div className={cx('top-shadow')} />
         </>
-      }
+      )}
       <div className={cx('background')}>
-        {props.movable &&
-          <div className={cx('header')} onMouseDown={moveHandler}/>
-        }
-        <textarea 
-          className={cx('content')} 
-          onChange={setContentHandler} 
-          value={content} 
+        {props.movable && <div className={cx('header')} onMouseDown={moveHandler} />}
+        <textarea
+          className={cx('content')}
+          onChange={setContentHandler}
+          value={content}
           placeholder={'Enter the content'}
           disabled={!props.editable}
         />
-        {props.resizable &&
-          <div className={cx('resize-corner')} onMouseDown={resizeHandler}/>
-        }
+        {props.resizable && <div className={cx('resize-corner')} onMouseDown={resizeHandler} />}
       </div>
     </div>
   );
-}
+};

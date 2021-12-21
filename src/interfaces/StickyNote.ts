@@ -9,28 +9,28 @@ export interface IStickyNote {
   position: IVector;
   size: IVector;
   color?: number;
-};
+}
 
 export const stickyNoteFactory = (model?: Partial<IStickyNote>): IStickyNote => {
   return {
     id: generateId(),
     content: '',
-    position: {x: 0, y: 0},
-    size: {x: 0, y: 0},
+    position: { x: 0, y: 0 },
+    size: { x: 0, y: 0 },
     ...model,
   };
 };
 
 export interface DroppableZone {
-  zone: React.RefObject<HTMLInputElement>,
-  handler: (sticker: Partial<IStickyNote>) => void;
-};
+  zone: React.RefObject<HTMLInputElement>;
+  handler: (stickerId: TStickerId, sticker?: IStickyNote) => void;
+}
 
 export interface IStickyNoteProps extends IStickyNote {
   withShadow?: boolean;
   editable?: boolean;
   resizable?: boolean;
   movable?: boolean;
-  onSave?: (sticker: IStickyNote) => void;
+  onSave?: (stickerId: TStickerId, sticker?: IStickyNote) => void;
   droppableZones?: DroppableZone[];
-};
+}
