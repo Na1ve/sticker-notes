@@ -19,14 +19,17 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
 
   const saveHandler = (aditableProperty: Partial<IStickyNote>) => {
     if (props.onSave) {
-      props.onSave({
+      props.onSave(
         id,
-        size,
-        position,
-        content,
-        color,
-        ...aditableProperty,
-      })
+        {
+          id,
+          size,
+          position,
+          content,
+          color,
+          ...aditableProperty,
+        }
+      )
     }
   };
 
@@ -45,7 +48,7 @@ export const StickyNote: React.FC<IStickyNoteProps> = (props: IStickyNoteProps) 
         zone,
         handler: (result: boolean) => {
           if (result) {
-            handler({id});
+            handler(id);
           }
         }
       };

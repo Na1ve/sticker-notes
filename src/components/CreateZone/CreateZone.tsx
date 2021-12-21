@@ -5,7 +5,7 @@ import styles from './CreateZone.css';
 import { generateId } from '../../utils/generateId';
 
 import { IVector } from '../../interfaces/Vector';
-import { IStickyNote, stickyNoteFactory, IStickyNoteProps } from '../../interfaces/StickyNote';
+import { IStickyNote, stickyNoteFactory, IStickyNoteProps, TStickerId } from '../../interfaces/StickyNote';
 import { StickyNote } from '../StickyNote';
 
 const cx = classNames.bind(styles);
@@ -48,7 +48,7 @@ const stickyNotePropsByStep: Record<Step, Partial<IStickyNoteProps>> = {
 };
 
 interface ICreateZoneProps {
-  onSave: (sticker: IStickyNote) => void;
+  onSave: (stickerId: TStickerId, sticker: IStickyNote) => void;
   lastUsedColor?: number | null;
 }
 
@@ -80,9 +80,9 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
     height: `${DEFAULT_SIZE.y}px`,
     top: `${DEFAULT_POSITION.y}px`,
     left: `${DEFAULT_POSITION.x}px`,
-  };
+  } as React.CSSProperties;
 
-  const nextStepHandler = (stickerProps: IStickyNote) => {
+  const nextStepHandler = (id: TStickerId, stickerProps: IStickyNote) => {
     switch (step) {
       case Step.Create:
         setStickerProps(stickerProps);
@@ -91,10 +91,13 @@ const CreateZone: React.FC<ICreateZoneProps> = ({onSave: handleSave}) => {
       case Step.SetSize:
         createNewDummy();
         setStep(Step.Create);
-        handleSave({
-          ...stickerProps, 
-          content: ''
-        });
+        handleSave(
+          stickerProps.id, 
+          {
+            ...stickerProps, 
+            content: ''
+          }
+        );
         break;
     }
   }

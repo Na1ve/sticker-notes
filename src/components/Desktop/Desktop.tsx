@@ -22,14 +22,14 @@ const Desktop: React.FC<IDesktopProps> = ({
 }) => {
   const trashZone = React.useRef(null);
 
-  const saveHandler = (sticker: Partial<IStickyNote>) => {
+  const saveHandler = (stickerId: TStickerId, sticker?: IStickyNote) => {
     const newStickerList = [...stickerList];
-    const index = newStickerList.findIndex(({id}) => id === sticker.id);
+    const index = newStickerList.findIndex(({id}) => id === stickerId);
     if (index >= 0) {
       newStickerList.splice(index, 1);
     }
-    if (sticker.position && sticker.size) {
-      newStickerList.push(sticker as IStickyNote);
+    if (sticker) {
+      newStickerList.push(sticker);
     }
     setStickerList(newStickerList);
   }
